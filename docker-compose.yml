@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app:
-    image: vk-dynamic-prifile-status
+    image: vk-dynamic-profile-status
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,4 +11,7 @@ services:
     environment:
       - TOKEN=your_token
       - TZ=Europe/Moscow # your time zone
+      - CITY=moscow # city for forecast in profile status
+      - ACCUWEATHER_API_KEY=your_token
+      - FORECAST=True # 'True' if enable
     restart: always
