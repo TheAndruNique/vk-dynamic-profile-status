@@ -1,14 +1,23 @@
 import datetime
 import random
+from enum import Enum
+from typing import Literal
 
 
-class TimeOfDay:
+class TimeOfDay(Enum):
     MORNING = 'morning'
     DAY = 'day'
     EVENING = 'evening'
     NIGHT = 'night'
 
-  
+
+time_of_day_emojis = {
+    TimeOfDay.MORNING : ['🐳'],
+    TimeOfDay.DAY     : ['☀️', '🐳'],
+    TimeOfDay.EVENING : ['🌆'],
+    TimeOfDay.NIGHT   : ['🌙', '🌠', '🛌', '🌌', '🪐'],
+}
+
 def get_time_of_day(current_time: datetime.datetime):
     hour = current_time.hour
     if 6 <= hour < 12:
@@ -20,16 +29,9 @@ def get_time_of_day(current_time: datetime.datetime):
     else:
         return TimeOfDay.NIGHT
 
-def get_emoji(time_of_day):
+def get_emoji(time_of_day: TimeOfDay):
     emoji = time_of_day_emojis.get(time_of_day)
     if isinstance(emoji, list):
         return random.choice(emoji)
     if isinstance(emoji, str):
         return emoji
-
-time_of_day_emojis = {
-    'morning': ['🐳'],
-    'day': ['☀️', '🐳'],
-    'evening': ['🌆'],
-    'night': ['🌙', '🌠', '☄', '🛌', '🌌', '🪐'],
-}
