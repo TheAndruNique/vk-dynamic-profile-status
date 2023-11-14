@@ -38,3 +38,5 @@ def get_emoji(time_of_day: TimeOfDay) -> str:
         return random.choice(emoji)
     if isinstance(emoji, str):
         return emoji
+    else:
+        raise ValueError("Invalid value for time_of_day. Expected type TimeOfDay.")
