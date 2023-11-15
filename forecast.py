@@ -39,15 +39,15 @@ class WeatherManager:
             logging.error('Error while retrieving current temperature.')
             return None
 
-    def get_forecast(self, hours):
-        if self.forecast_cache.get(hours):
-            return self.forecast_cache[hours]
+    def get_forecast(self, hour):
+        if self.forecast_cache.get(hour):
+            return self.forecast_cache[hour]
 
         current_temperature = self.__get_current_temperature()
 
         if current_temperature:
             self.forecast_cache.clear()
-            self.forecast_cache[hours] = current_temperature
+            self.forecast_cache[hour] = current_temperature
             return current_temperature
         else:
             return None
