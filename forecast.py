@@ -1,34 +1,53 @@
 import requests
-import json
 import os
 import logging
 
 
-ACCUWEATHER_API_KEY = os.getenv('ACCUWEATHER_API_KEY')
+class WeatherManager:
+    def __init__(self):
+        self.ACCUWEATHER_API_KEY = os.getenv('ACCUWEATHER_API_KEY')
+        if not self.ACCUWEATHER_API_KEY:
+            logging.warning('Environment variable ACCUWEATHER_API_KEY is not specified')
+            exit(1)
+        
+        if not os.getenv("CITY"):
+            logging.warning('Environment variable CITY is not specified')
+            exit(1)
+        
+        self.location_key = self.__get_location_key(os.getenv("CITY"))
+        self.forecast_cache = {}
 
-def get_location_key():
-    try:
-        location_key_url = f'http://dataservice.accuweather.com/locations/v1/cities/search?apikey={ACCUWEATHER_API_KEY}&q={os.getenv("CITY")}'
-        location_key_query = requests.get(location_key_url)
-        location_key = json.loads(location_key_query.text)
-        logging.info('LOCATION_KEY has been successufly parsed.')
-        return location_key[0]["Key"]
-    except KeyError:
-        logging.error('Error while parsing LOCATION_KEY.')
+    def __get_location_key(self, city):
+        try:
+            location_key_url = f'http://dataservice.accuweather.com/locations/v1/cities/search?apikey={self.ACCUWEATHER_API_KEY}&q={city}'
+            location_key_query = requests.get(location_key_url)
+            location_key_data = location_key_query.json()
+            location_key = location_key_data[0]["Key"]
+            logging.info('LOCATION_KEY has been successfully parsed.')
+            return location_key
+        except (IndexError, KeyError):
+            logging.error('Error while parsing LOCATION_KEY.')
+            return None
 
-LOCATION_KEY = get_location_key()
+    def __get_current_temperature(self):
+        try:
+            response = requests.get(f'http://dataservice.accuweather.com/currentconditions/v1/{self.location_key}?apikey={self.ACCUWEATHER_API_KEY}&language=en&details=true&metric=true')
+            forecast_data = response.json()
+            current_temperature = forecast_data[0]['Temperature']['Metric']['Value']
+            return f'{current_temperature} ℃'
+        except (IndexError, KeyError):
+            logging.error('Error while retrieving current temperature.')
+            return None
 
-cache = {}
+    def get_forecast(self, hours):
+        if self.forecast_cache.get(hours):
+            return self.forecast_cache[hours]
 
-def get_forecast(hours):
-    if cache.get(hours):
-        return cache.get(hours)
-    try:
-        response = requests.get(f'http://dataservice.accuweather.com/currentconditions/v1/{LOCATION_KEY}?apikey={ACCUWEATHER_API_KEY}&language=en&details=true&metric=true')
-        forecast = json.loads(response.text)
-        current_temperature = forecast[0]['Temperature']['Metric']['Value']
-        cache.clear()
-        cache[hours] = f'{current_temperature} ℃'
-        return f'{current_temperature} ℃'
-    except KeyError:
-        return None
+        current_temperature = self.__get_current_temperature()
+
+        if current_temperature:
+            self.forecast_cache.clear()
+            self.forecast_cache[hours] = current_temperature
+            return current_temperature
+        else:
+            return None
