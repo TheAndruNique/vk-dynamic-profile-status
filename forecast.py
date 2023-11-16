@@ -41,7 +41,7 @@ class WeatherManager:
             return None
 
     @staticmethod
-    async def __get_request_json(url) -> aiohttp.ClientResponse:
+    async def __get_request_json(url):
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
                 return await response.json()
@@ -57,4 +57,11 @@ class WeatherManager:
             self.forecast_cache[hour] = current_temperature
             return current_temperature
         else:
+            return self.get_last_cached_value()
+
+    def get_last_cached_value(self):
+        try:
+            _, value = self.forecast_cache.popitem()
+            return value
+        except KeyError:
             return None
