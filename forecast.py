@@ -1,6 +1,7 @@
 import requests
 import os
 import logging
+import aiohttp
 
 
 class WeatherManager:
@@ -13,7 +14,7 @@ class WeatherManager:
         if not os.getenv("CITY"):
             logging.warning('Environment variable CITY is not specified')
             exit(1)
-        
+
         self.location_key = self.__get_location_key(os.getenv("CITY"))
         self.forecast_cache = {}
 
@@ -29,21 +30,27 @@ class WeatherManager:
             logging.error('Error while parsing LOCATION_KEY.')
             return None
 
-    def __get_current_temperature(self):
+    async def __get_current_temperature(self):
         try:
-            response = requests.get(f'http://dataservice.accuweather.com/currentconditions/v1/{self.location_key}?apikey={self.ACCUWEATHER_API_KEY}&language=en&details=true&metric=true')
-            forecast_data = response.json()
-            current_temperature = forecast_data[0]['Temperature']['Metric']['Value']
+            url = f'http://dataservice.accuweather.com/currentconditions/v1/{self.location_key}?apikey={self.ACCUWEATHER_API_KEY}&language=en&details=true&metric=true'
+            response = await self.__get_request_json(url)
+            current_temperature = response[0]['Temperature']['Metric']['Value']
             return f'{current_temperature} ℃'
         except (IndexError, KeyError):
             logging.error('Error while retrieving current temperature.')
             return None
 
-    def get_forecast(self, hour):
+    @staticmethod
+    async def __get_request_json(url) -> aiohttp.ClientResponse:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                return await response.json()
+
+    async def get_forecast(self, hour):
         if self.forecast_cache.get(hour):
             return self.forecast_cache[hour]
 
-        current_temperature = self.__get_current_temperature()
+        current_temperature = await self.__get_current_temperature()
 
         if current_temperature:
             self.forecast_cache.clear()

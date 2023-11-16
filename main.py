@@ -26,11 +26,14 @@ class Application:
         await self.user.api.status.set(new_status)
     
     def run(self):
-        asyncio.run(self.main())
+        # asyncio.run(self.main())
+        loop = asyncio.get_event_loop()
+        loop.create_task(self.main())
+        loop.run_forever()
     
-    def __get_forecast(self, hour):
+    async def __get_forecast(self, hour):
         if hasattr(self, 'weather_manager'):
-            self.weather_manager.get_forecast(hour)
+            return await self.weather_manager.get_forecast(hour)
         else:
             return None
 
@@ -38,7 +41,7 @@ class Application:
         last_time = None
         while True:
             current_time = datetime.datetime.now()
-            forecast = self.__get_forecast(current_time.hour)
+            forecast = await self.__get_forecast(current_time.hour)
             time_of_day = get_time_of_day(current_time)
             emoji = get_emoji(time_of_day)
             status_time = current_time.strftime("%I:%M %p")
