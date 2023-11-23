@@ -2,6 +2,17 @@
 
 Display time or weather forecast in your VK profile status, customized to your preferred format.
 
+### Example:
+You have the following `STATUS_FORMAT`:
+```
+STATUS_FORMAT={time} {emoji} | {forecast}
+```
+
+The service will insert values like that:
+```
+5:35 AM 🌠 | -2℃
+```
+
 ### Setting up the project:
 
 1. Clone the GitHub repo:
@@ -51,7 +62,9 @@ python main.py
 
 ### Setting up with Docker:
 
-1. Make sure you have Docker installed, otherwise install it:
+> [!Note]
+> If you have Docker installed, you can easily set up and run the project without manually installing dependencies.
+1. First, make sure you have Docker installed.
 - [Install Docker](https://docs.docker.com/get-docker/)
 
 2. Clone the GitHub repo:
@@ -100,16 +113,6 @@ time_of_day_emojis = {
     TimeOfDay.EVENING : ['🌆'],
     TimeOfDay.NIGHT   : ['🌙', '🌠', '🛌', '🌌', '🪐'],
 }
-```
-### Example:
-You have the following `STATUS_FORMAT`:
-```
-STATUS_FORMAT={time} {emoji} | {forecast}
-```
-
-The service will insert values like that:
-```
-5:35 AM 🌠 | -2℃
 ```
 
 ### How to get VK token:
