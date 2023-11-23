@@ -11,7 +11,7 @@ services:
     environment:
       - TOKEN=your_token
       - TZ=Europe/Moscow # your time zone
-      - CITY=moscow # city for forecast in profile status
+      - CITY=your_city # city for forecast in profile status
       - ACCUWEATHER_API_KEY=your_token
       - STATUS_FORMAT={time} {emoji} | {forecast}
     restart: always
