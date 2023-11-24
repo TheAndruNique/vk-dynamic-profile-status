@@ -3,7 +3,7 @@
 Display time or weather forecast in your VK profile status, customized to your preferred format.
 
 ### Example:
-You have the following `STATUS_FORMAT`:
+You have the following `STATUS_FORMAT` environment:
 ```
 STATUS_FORMAT={time} {emoji} | {forecast}
 ```
