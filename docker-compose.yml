@@ -9,9 +9,9 @@ services:
     container_name: vk-dynamic-prifile-status
 
     environment:
-      - TOKEN=your_token
+      - TOKEN= #your token
       - TZ=Europe/Moscow # your time zone
-      - CITY=your_city # city for forecast in profile status
-      - ACCUWEATHER_API_KEY=your_token
-      - STATUS_FORMAT={time} {emoji} | {forecast}
+      - CITY= # city for forecast in profile status
+      - ACCUWEATHER_API_KEY= # your token
+      - STATUS_FORMAT={time} {emoji} | {forecast} # your format
     restart: always
