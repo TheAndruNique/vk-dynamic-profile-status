@@ -2,7 +2,7 @@
 
 Display time or weather forecast in your VK profile status, customized to your preferred format.
 
-### Example:
+## Introduction:
 You have the following `STATUS_FORMAT` environment:
 ```
 STATUS_FORMAT={time} {emoji} | {forecast}
@@ -13,7 +13,7 @@ The service will insert values like that:
 5:35 AM 🌠 | -2℃
 ```
 
-### Setting up the project:
+## Setting up the project:
 
 1. Clone the GitHub repo:
 ```
@@ -115,8 +115,10 @@ time_of_day_emojis = {
 }
 ```
 
-### How to get VK token:
+## How to get VK token:
 A token must have rights to update the status
 - [Create a vk token](https://vkhost.github.io/)
 
+## License
+This project is licensed under [MIT license](https://mit-license.org/)
 
